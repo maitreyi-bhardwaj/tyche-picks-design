@@ -23,15 +23,22 @@ Brand and poster system for **Tyche Picks**, a model-driven sports picks account
 | ![](https://placehold.co/24x24/97A3B6/97A3B6.png) | Secondary text | `#97A3B6` |
 | ![](https://placehold.co/24x24/505660/505660.png) | Muted (decorative only) | `#505660` |
 
+## Example
+
+<img src="examples/2026-mlb-season-recap.png" alt="2026 MLB season recap poster" width="100%">
+
+*2026 MLB season recap. The breakdown, review and reusable prompt are in [DESIGN.md → Creating Graphics](DESIGN.md#creating-graphics).*
+
 ## Files
 
 ```
-DESIGN.md                  full design system
-assets/tyche-coin-logo.png the Tyche coin logo (994×995)
+DESIGN.md                            full design system + graphics guide
+assets/tyche-coin-logo.png           the Tyche coin logo (994×995)
+examples/2026-mlb-season-recap.png   reference poster (1376×768)
 ```
 
 ## Every poster needs
 
 - The coin, unchanged
-- One violet moment
+- Violet within budget: 1 number + 1 word + 1 row
 - Footer: `21+. Gambling problem? Call 1-800-GAMBLER.`

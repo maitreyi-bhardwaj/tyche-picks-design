@@ -139,7 +139,7 @@ Tyche Picks posts sports picks backed by a model and sells access to Tyche Chat,
 
 **Key Characteristics:**
 - A near-black ground (#0A0A0A) with panels stepped one shade lighter (#141414 → #1E1E1E). Depth comes from these value steps, not from glow.
-- **One violet moment per poster:** a hero number, a highlighted word, or a highlighted row in #9D59EF. Violet is the only bright color.
+- **Violet budget:** each poster gets at most one hero number, one highlighted word and one highlighted row in #9D59EF, plus a violet rim light on photos. Violet is the only bright color.
 - The Tyche coin appears as supplied on every poster. It is never redrawn or recolored.
 - Headlines are extra-bold geometric sans with tight tracking. Labels are small, uppercase and widely tracked.
 - Photos are near-monochrome with a violet rim light and show anonymous players only.
@@ -148,7 +148,7 @@ Tyche Picks posts sports picks backed by a model and sells access to Tyche Chat,
 ## Colors
 
 ### Brand & Accent
-- **Accent Violet** (`{colors.accent}`, #9D59EF): The only bright color. Use it for the hero number (odds, units, record), one highlighted word, buttons, and the rim light on photos. Use it **once per poster**.
+- **Accent Violet** (`{colors.accent}`, #9D59EF): The only bright color. Use it for the hero number (odds, units, record), one highlighted word, buttons, and the rim light on photos. **Budget per poster:** 1 hero number + 1 highlighted word + 1 highlighted row, at most. A poster with fewer violet elements is fine.
 - **Coin silver and royal blue:** these belong to the logo only. No other blue or silver may appear in a layout.
 
 ### Surface
@@ -217,7 +217,7 @@ Sizes are for a 1080px-wide canvas. Scale them proportionally for other formats.
 ### Poster Formats (X)
 | Name | Size | Use |
 |---|---|---|
-| Landscape | 1200 × 675 | Default timeline image |
+| Landscape | 1200 × 675 | Default timeline image. Gemini 16:9 output is 1376 × 768, which is acceptable as is. |
 | Portrait | 1080 × 1350 | Parlay cards with 3+ legs, season recap boards |
 | Square | 1080 × 1080 | Play of the Day, CASHED |
 
@@ -250,7 +250,7 @@ A #141414 panel with a 1px #1E1E1E border and a 16px radius. Contents, left to r
 - **ODDS** stat box
 - **% CONFIDENCE** stat box
 
-To highlight the strongest leg, use `leg-row-highlight` on one row only. The total odds appear in `{typography.display-md}`, and they go violet only if nothing else on the poster is violet.
+To highlight the strongest leg, use `leg-row-highlight` on one row only. The total odds appear in `{typography.display-md}`. They count as the poster's hero number if they are set in violet.
 
 ### Stat Box
 A #1E1E1E box with a 24px radius. It holds a label in #97A3B6 CAPS above a value in #E7E6E6 `{typography.stat}`.
@@ -272,11 +272,12 @@ Team colors are not used.
 A panel listing each leg with a ✅ in #E7E6E6. "CASHED" appears in display-lg, and `+[UNITS]u` is the violet hero number. The record line reads `[RECORD]` in secondary text.
 
 ### Season Recap Board
-On a Portrait canvas:
-- headline (e.g. "WE CRUSHED THE SEASON.")
-- `+[UNITS]U` violet hero number
-- a grid of W–L stat boxes by prop type, using `[RECORD]` placeholders
-- the coin as the hero or in the header
+The approved reference is `examples/2026-mlb-season-recap.png` (see Creating Graphics). It can be Landscape or Portrait. It contains:
+- the coin and a season pill in the header
+- a two-line headline with one violet word (e.g. "WE *CRUSHED* THE SEASON.")
+- the `+[UNITS]U` violet hero number with its basis line (e.g. "AT −110 · …")
+- a W–L panel: outlined rows with dotted leader lines from the prop name to `[W] – [L]`, and one highlighted violet row
+- a photo of an anonymous player with a violet rim light on one side
 
 Every number must come from the client's data.
 
@@ -310,7 +311,7 @@ Tyche Chat uses "18+ · For informational purposes only · Not gambling advice".
 
 ### Do
 - Use the supplied coin PNG on every poster, unchanged.
-- Keep one violet moment per poster.
+- Keep within the violet budget: 1 number + 1 word + 1 row.
 - Set the footer in #97A3B6.
 - Check every digit after generation.
 - Place real team and league logos in Figma after generation.
@@ -337,6 +338,91 @@ When space runs out, drop elements in this order: tagline → photo → % CONFID
 
 ### Image Behavior
 Generated imagery stays out of the coin zone and the bottom 120px (footer).
+
+## Creating Graphics
+
+### Process
+1. **Collect the data:** get the exact numbers from the client (records, units, odds, pick count) as text. Do not read them off old posters.
+2. **Check the numbers:** recompute any derived figure (units from W–L, totals) before writing the prompt. An example follows.
+3. **Choose the template:** Parlay, Play of the Day, CASHED, Season Recap, or Promo (see Components).
+4. **Fill the prompt:** use the template in the Agent Prompt Guide. Quote every string exactly.
+5. **Generate:** attach the coin PNG only, and make 2–3 attempts at most.
+6. **QA:** run the checklist below.
+7. **Fix in Figma:** paste the real coin over the generated one, retype any wrong digits, and place league logos if needed.
+8. **Export:** PNG, at 1200 × 675 / 1376 × 768, 1080 × 1350 or 1080 × 1080.
+
+### QA Checklist
+- [ ] Every digit matches the client's data
+- [ ] The coin is unchanged: silver and blue, TYCHE / PICKS spelled correctly, profile facing right
+- [ ] Violet use is within budget: ≤ 1 number, ≤ 1 word, ≤ 1 row
+- [ ] No green, gold, yellow, navy, chrome or glow
+- [ ] The player is anonymous: no face, logo or jersey number
+- [ ] The handle is correct (@TychePicks vs @TYCHEPICKS24, unresolved)
+- [ ] The footer is present, readable, and spelled correctly
+- [ ] There is no extra or invented text
+
+### Worked Example — 2026 MLB Season Recap
+
+<p align="center"><img src="examples/2026-mlb-season-recap.png" alt="2026 MLB season recap poster" width="100%"></p>
+
+`examples/2026-mlb-season-recap.png`: 1376 × 768, made by the client in Gemini. It is the reference for the Season Recap Board template.
+
+**Layout zones (left to right, top to bottom)**
+| Zone | Content | Style |
+|---|---|---|
+| Header | Coin + pill "2026 MLB SEASON" + "RECAP · PROPS" | Dark gray pill (#1E1E1E range), secondary text |
+| Headline | "WE **CRUSHED** THE SEASON." | Extra-bold caps, #E7E6E6, one violet word |
+| Subline | "EVERY PICK. EVERY LINE. EVERY NIGHT." | Caps, regular weight, #E7E6E6 |
+| Hero | Pill "SEASON P&L · PROFITABLE PROPS" + **+3,500U** + "AT −110 · HITS / TOTAL BASES / STRIKEOUTS" | Violet display number, basis line beneath |
+| Data panel | W–L RECORD: Hits 13,307 – 9,784 · Total Bases 9,132 – 7,185 · Strikeouts 394 – 288 · ● Beat the closing line **19,915 WINS** | Outlined rows, dotted leaders, last row violet |
+| Photo | Anonymous batter, mid-swing, right third | Near-monochrome with violet rim light and a soft violet glow behind |
+| Footer | "74,000+ MLB PICKS · 2026 SEASON" · "@TYCHEPICKS24" · "21+. Gambling problem? Call 1-800-GAMBLER." | Centered, small, secondary gray |
+
+**Review against this system**
+| Rule | Result | Note |
+|---|---|---|
+| Violet budget | Pass | 1 word (CRUSHED), 1 number (+3,500U), 1 row (closing line) + rim light |
+| Palette | Partial | The "SEASON P&L" pill is near-white with black text. Near-white is not a fill color in this palette. Use #271A38 / #4B2D6F instead, or accept it as an exception |
+| Coin | Check | About 90px at 1376 wide (≈ 70px at 1080), below the 120px minimum. The lettering is not readable at that size |
+| Photo | Pass | No visible face, logo or number |
+| Footer | Pass | Present, in secondary gray |
+| Handle | Open | @TYCHEPICKS24, which differs from @TychePicks on the profile |
+| Numbers | Consistent | See the check below |
+
+**Number check (instructional).** W = 13,307 + 9,132 + 394 = 22,833. L = 9,784 + 7,185 + 288 = 17,257. At −110, risking 1u per pick: 22,833 × (100/110) − 17,257 = **+3,500.3u**, which matches "+3,500U". Graded picks in the panel total 40,090, against "74,000+ MLB picks" in the footer. That difference may be other prop types or ungraded picks. Confirm it with the client before reusing the line. This check shows only that the numbers agree with each other; it does not show that they are true.
+
+**Prompt (reconstructed to reproduce this poster; not the client's original prompt)**
+```
+LOGO: Place the attached coin exactly as supplied, top-left, about 15% of the canvas height. Round silver coin, royal-blue enamel ring, serif "TYCHE" top and "PICKS" bottom, silver relief profile of the goddess Tyche facing right wearing a tower crown, beaded border. Do not redraw or recolor it.
+
+COLOR PALETTE: background #0A0A0A; panel borders #1E1E1E; one accent only, violet #9D59EF, used for the word "CRUSHED", the number "+3,500U", the bullet dot and "19,915 WINS" in the last row; pills #271A38 with #4B2D6F outline; text #E7E6E6; labels #97A3B6.
+
+ART DIRECTION: 16:9 premium dark sports-data poster, modern AI-app style. Right third: anonymous baseball batter mid-swing, near-monochrome, face in shadow, no team logo, no jersey number, crisp violet #9D59EF rim light along the edge and a soft violet glow behind. Left two thirds: typography and a data panel on flat black. Generous negative space.
+
+HIERARCHY:
+1. Headline, two lines, huge extra-bold caps
+2. "+3,500U" huge extra-bold violet
+3. W–L panel: outlined rounded rows, dotted leader lines from label to numbers, numbers right-aligned
+4. Footer, centered, small
+
+EXACT TEXT (spell exactly, digit by digit):
+Header pill: "2026 MLB SEASON"   beside it: "RECAP · PROPS"
+Headline: "WE CRUSHED" / "THE SEASON."
+Subline: "EVERY PICK. EVERY LINE. EVERY NIGHT."
+Pill: "SEASON P&L · PROFITABLE PROPS"
+Hero: "+3,500U"
+Under hero: "AT −110 · HITS / TOTAL BASES / STRIKEOUTS"
+Panel title: "W – L RECORD"
+Rows: "HITS  13,307 – 9,784" · "TOTAL BASES  9,132 – 7,185" · "STRIKEOUTS  394 – 288" · "BEAT THE CLOSING LINE  19,915 WINS"
+Footer: "74,000+ MLB PICKS · 2026 SEASON" / "@TYCHEPICKS24" / "21+. Gambling problem? Call 1-800-GAMBLER."
+
+DO NOT: green, gold, yellow, extra blue, neon glow, chrome, lens flare, serif fonts, white pill fills, player face, jersey numbers, team logos, extra text, changing any number, redrawing the coin.
+```
+
+**Reusing it for another sport or season:** replace the season pill, the sport in the photo line, the prop names, and every number with placeholders (`[SEASON]`, `[SPORT]`, `[PROP 1]`, `[W] – [L]`, `[UNITS]`, `[PICK COUNT]`). Fill them from client data only.
+
+### Adding New Examples
+Save approved posters to `examples/` as `[yyyy]-[league]-[type].png`. Add a short entry here: zones, a review table, and the prompt used.
 
 ## Agent Prompt Guide (Gemini / Weavy)
 
